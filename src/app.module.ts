@@ -6,10 +6,17 @@ import { AuthModule } from './auth/auth.module';
 import { ReviewModule } from './review/review.module';
 import { TopPageModule } from './top-page/top-page.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { getMongoConfig } from './configs/mongo.config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/test'),
+    ConfigModule.forRoot(),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getMongoConfig,
+    }),
     ProductModule,
     AuthModule,
     ReviewModule,
