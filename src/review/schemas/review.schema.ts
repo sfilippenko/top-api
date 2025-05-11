@@ -18,7 +18,7 @@ export class Review {
   @Prop()
   rating: number;
 
-  @Prop({ type: { type: SchemaMongoose.Types.ObjectId, ref: Product.name } })
+  @Prop({ type: SchemaMongoose.Types.ObjectId, ref: Product.name })
   productId: Types.ObjectId;
 }
 
