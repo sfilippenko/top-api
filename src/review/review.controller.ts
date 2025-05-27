@@ -27,6 +27,7 @@ export class ReviewController {
     return this.reviewService.create(dto);
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
   async delete(@Param('id') id: string) {
     const deleted = await this.reviewService.delete(id);
@@ -37,13 +38,8 @@ export class ReviewController {
     return deleted;
   }
 
-  @UseGuards(JwtGuard)
   @Get('product/:productId')
-  async getByProductId(
-    @Param('productId') productId: string,
-    @UserEmail() email: string,
-  ) {
-    console.log('email', email);
+  async getByProductId(@Param('productId') productId: string) {
     return this.reviewService.findByProductId(productId);
   }
 }

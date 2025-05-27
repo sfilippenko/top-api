@@ -6,6 +6,8 @@ import { AppModule } from './../src/app.module';
 import { CreateReviewDto } from '../src/review/dto/create-review.dto';
 import { Types, disconnect } from 'mongoose';
 import { REVIEW_NOT_FOUND } from '../src/review/review.constants';
+import { AuthDto } from '../src/auth/dto/auth.dto';
+import { USER_NOT_EXIST_MESSAGE } from '../src/auth/auth.constants';
 
 const productId = new Types.ObjectId().toHexString();
 
@@ -17,17 +19,33 @@ const testDto: CreateReviewDto = {
   productId,
 };
 
+const testUser: AuthDto = {
+  login: 'qwerty@mail.ru',
+  password: 'qwerty',
+};
+
 describe('ReviewController (e2e)', () => {
   let app: INestApplication<App>;
   let createdId: string;
+  let userId: string;
+  let token: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    const userResponse = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(testUser);
+    userId = userResponse.body._id;
+
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send(testUser);
+    token = loginResponse.body.access_token;
   });
 
   it('/review/create (POST) success', async () => {
@@ -71,6 +89,7 @@ describe('ReviewController (e2e)', () => {
   it('/review/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .delete(`/review/${createdId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
     expect(response.body._id).toBe(createdId);
@@ -79,6 +98,7 @@ describe('ReviewController (e2e)', () => {
   it('/review/:id (DELETE) not exist', async () => {
     const response = await request(app.getHttpServer())
       .delete(`/review/${new Types.ObjectId().toHexString()}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(404);
 
     expect(response.body).toEqual({
@@ -87,7 +107,18 @@ describe('ReviewController (e2e)', () => {
     });
   });
 
-  afterAll(() => {
+  afterAll(async () => {
+    await request(app.getHttpServer())
+      .delete(`/auth/${userId}`)
+      .set('Authorization', `Bearer ${token}`);
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send(testUser);
+    expect(response.body).toEqual({
+      statusCode: 401,
+      message: USER_NOT_EXIST_MESSAGE,
+      error: 'Unauthorized',
+    });
     disconnect();
   });
 });

@@ -6,10 +6,16 @@ import {
   UsePipes,
   ValidationPipe,
   BadRequestException,
+  UseGuards,
+  Delete,
+  Param,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
-import { USER_EXIST_MESSAGE } from './auth.constants';
+import { USER_EXIST_MESSAGE, USER_NOT_EXIST_MESSAGE } from './auth.constants';
+import { JwtGuard } from './guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -31,5 +37,16 @@ export class AuthController {
   async login(@Body() dto: AuthDto) {
     const user = await this.authService.validateUser(dto.login, dto.password);
     return this.authService.login(user.email);
+  }
+
+  @UseGuards(JwtGuard)
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    const deleted = await this.authService.deleteUser(id);
+    if (!deleted) {
+      throw new HttpException(USER_NOT_EXIST_MESSAGE, HttpStatus.NOT_FOUND);
+    }
+
+    return deleted;
   }
 }

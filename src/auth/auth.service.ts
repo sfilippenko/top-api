@@ -25,6 +25,10 @@ export class AuthService {
     });
   }
 
+  async deleteUser(id: string) {
+    return this.userModel.findByIdAndDelete(id).exec();
+  }
+
   async findUser(email: string) {
     return this.userModel.findOne({ email }).exec();
   }
