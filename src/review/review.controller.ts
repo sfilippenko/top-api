@@ -5,17 +5,15 @@ import {
   Delete,
   Param,
   Get,
-  HttpException,
-  HttpStatus,
   UsePipes,
   ValidationPipe,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewService } from './review.service';
 import { REVIEW_NOT_FOUND } from './review.constants';
 import { JwtGuard } from '../auth/guards/jwt.guard';
-import { UserEmail } from '../decorators/user-email.decorator';
 
 @Controller('review')
 export class ReviewController {
@@ -32,7 +30,7 @@ export class ReviewController {
   async delete(@Param('id') id: string) {
     const deleted = await this.reviewService.delete(id);
     if (!deleted) {
-      throw new HttpException(REVIEW_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(REVIEW_NOT_FOUND);
     }
 
     return deleted;

@@ -59,7 +59,7 @@ describe('ReviewController (e2e)', () => {
   });
 
   it('/review/create (POST) fail', async () => {
-    const response = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/review/create')
       .send({
         ...testDto,
@@ -67,7 +67,6 @@ describe('ReviewController (e2e)', () => {
         rating: 0,
       })
       .expect(400);
-    console.log(response.body);
   });
 
   it('/review/product/:productId (GET)', async () => {
@@ -102,6 +101,7 @@ describe('ReviewController (e2e)', () => {
       .expect(404);
 
     expect(response.body).toEqual({
+      error: 'Not Found',
       statusCode: 404,
       message: REVIEW_NOT_FOUND,
     });

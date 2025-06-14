@@ -32,7 +32,7 @@ export class HhData {
   updatedAt: Date;
 }
 
-@Schema()
+@Schema({ timestamps: true })
 export class TopPage {
   @Prop({ enum: TopLevelCategory })
   firstCategory: TopLevelCategory;

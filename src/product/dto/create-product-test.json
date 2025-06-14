@@ -1,0 +1,15 @@
+{
+  "image": "milk.png",
+  "title": "Milk",
+  "link": "link string",
+  "initialRating": 5,
+  "price": 130,
+  "oldPrice": 130,
+  "credit": 10,
+  "description": "milk desk",
+  "advantages": "adv",
+  "disAdvantages": "dis adv",
+  "tags": [],
+  "characteristics": [],
+  "categories": ["food"]
+}

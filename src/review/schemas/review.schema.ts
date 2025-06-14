@@ -4,7 +4,7 @@ import { Product } from '../../product/schemas/product.schema';
 
 export type ReviewDocument = HydratedDocument<Review>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Review {
   @Prop()
   name: string;

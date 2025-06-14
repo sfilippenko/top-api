@@ -11,7 +11,7 @@ class ProductCharacteristic {
 
 export type ProductDocument = HydratedDocument<Product>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Product {
   @Prop()
   image: string;
@@ -20,10 +20,16 @@ export class Product {
   title: string;
 
   @Prop()
+  link: string;
+
+  @Prop()
+  initialRating: number;
+
+  @Prop()
   price: number;
 
   @Prop()
-  oldPrice: number;
+  oldPrice?: number;
 
   @Prop()
   credit: number;
