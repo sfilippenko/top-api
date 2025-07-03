@@ -16,6 +16,7 @@ import { AuthDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { USER_EXIST_MESSAGE, USER_NOT_EXIST_MESSAGE } from './auth.constants';
 import { JwtGuard } from './guards/jwt.guard';
+import { IdValidationPipe } from '../pipes/id-validation.pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -41,7 +42,7 @@ export class AuthController {
 
   @UseGuards(JwtGuard)
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', IdValidationPipe) id: string) {
     const deleted = await this.authService.deleteUser(id);
     if (!deleted) {
       throw new HttpException(USER_NOT_EXIST_MESSAGE, HttpStatus.NOT_FOUND);
