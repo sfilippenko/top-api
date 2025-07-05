@@ -72,6 +72,7 @@ describe('ReviewController (e2e)', () => {
   it('/product/create (POST) add milk', async () => {
     const response = await request(app.getHttpServer())
       .post('/product/create')
+      .set('Authorization', `Bearer ${token}`)
       .send(createMilkProductDto)
       .expect(201);
 
@@ -83,6 +84,7 @@ describe('ReviewController (e2e)', () => {
     const newDescription = 'new description';
     const response = await request(app.getHttpServer())
       .patch(`/product/${milkId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({
         description: newDescription,
       })
@@ -94,6 +96,7 @@ describe('ReviewController (e2e)', () => {
   it('/product/:id (PATCH) change back', async () => {
     const response = await request(app.getHttpServer())
       .patch(`/product/${milkId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({
         description: createMilkProductDto.description,
       })
@@ -105,6 +108,7 @@ describe('ReviewController (e2e)', () => {
   it('/review/:id (PATCH) add reviews', async () => {
     const goodReviewResponse = await request(app.getHttpServer())
       .post('/review/create')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         ...goodReview,
         productId: milkId,
@@ -114,6 +118,7 @@ describe('ReviewController (e2e)', () => {
 
     const badReviewResponse = await request(app.getHttpServer())
       .post('/review/create')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         ...badReview,
         productId: milkId,
