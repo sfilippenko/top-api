@@ -66,3 +66,10 @@ export class TopPage {
 }
 
 export const TopPageSchema = SchemaFactory.createForClass(TopPage);
+
+TopPageSchema.index({
+  title: 'text',
+  seoText: 'text',
+  'advantages.title': 'text',
+  'advantages.description': 'text',
+});

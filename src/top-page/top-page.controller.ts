@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -38,6 +39,11 @@ export class TopPageController {
       throw new NotFoundException(TOP_PAGE_NOT_FOUND);
     }
     return deletedTopPage;
+  }
+
+  @Get('search')
+  async search(@Query('text') text: string) {
+    return this.topPageService.searchTopPages(text);
   }
 
   @Get(':id')

@@ -47,4 +47,15 @@ export class TopPageService {
       ])
       .exec();
   }
+
+  async searchTopPages(text: string) {
+    return this.topPageModel
+      .find({
+        $text: {
+          $search: text,
+          $caseSensitive: false,
+        },
+      })
+      .exec();
+  }
 }
