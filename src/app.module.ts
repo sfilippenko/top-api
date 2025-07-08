@@ -9,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongoConfig } from './configs/mongo.config';
 import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -17,6 +18,10 @@ import { FilesModule } from './files/files.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: getMongoConfig,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: `${process.cwd()}/uploads`,
+      serveRoot: '/static',
     }),
     ProductModule,
     AuthModule,
