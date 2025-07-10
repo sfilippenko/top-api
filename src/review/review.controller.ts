@@ -15,15 +15,23 @@ import { ReviewService } from './review.service';
 import { REVIEW_NOT_FOUND } from './review.constants';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { IdValidationPipe } from '../pipes/id-validation.pipe';
+import { TelegramService } from '../telegram/telegram.service';
 
 @Controller('review')
 export class ReviewController {
-  constructor(private reviewService: ReviewService) {}
+  constructor(
+    private reviewService: ReviewService,
+    private telegramService: TelegramService,
+  ) {}
 
   @Post('create')
   @UsePipes(new ValidationPipe())
   async create(@Body() dto: CreateReviewDto) {
-    return this.reviewService.create(dto);
+    const createdReview = await this.reviewService.create(dto);
+    this.telegramService.sendMessage(
+      `Создан отзыва ${createdReview?.name} ${createdReview?.title} ${createdReview?.description} на продукт ${createdReview?.product?.title} с оценкой ${createdReview?.rating}`,
+    );
+    return createdReview;
   }
 
   @UseGuards(JwtGuard)

@@ -1,6 +1,6 @@
 {
-  "image": "milk.png",
-  "title": "Milk",
+  "image": "course.png",
+  "title": "Course",
   "link": "link string",
   "initialRating": 5,
   "price": 130,
@@ -11,5 +11,5 @@
   "disAdvantages": "dis adv",
   "tags": [],
   "characteristics": [],
-  "categories": ["food"]
+  "categories": ["js"]
 }

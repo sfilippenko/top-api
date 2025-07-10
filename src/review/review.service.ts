@@ -10,8 +10,12 @@ export class ReviewService {
     @InjectModel(Review.name) private readonly reviewModel: Model<Review>,
   ) {}
 
-  async create(dto: CreateReviewDto): Promise<ReviewDocument> {
-    return this.reviewModel.create(dto);
+  async create(dto: CreateReviewDto): Promise<ReviewDocument | null> {
+    const createdItem = await this.reviewModel.create(dto);
+    return this.reviewModel
+      .findById(createdItem._id)
+      .populate('product')
+      .exec();
   }
 
   async delete(id: string): Promise<ReviewDocument | null> {

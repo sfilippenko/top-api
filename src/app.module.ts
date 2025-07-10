@@ -10,6 +10,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMongoConfig } from './configs/mongo.config';
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TelegramModule } from './telegram/telegram.module';
+import { getTelegramConfig } from './configs/telegram.config';
 
 @Module({
   imports: [
@@ -28,6 +30,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ReviewModule,
     TopPageModule,
     FilesModule,
+    TelegramModule.forRooAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getTelegramConfig,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

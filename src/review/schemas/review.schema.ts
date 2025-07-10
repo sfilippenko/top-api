@@ -4,7 +4,11 @@ import { Product } from '../../product/schemas/product.schema';
 
 export type ReviewDocument = HydratedDocument<Review>;
 
-@Schema({ timestamps: true })
+@Schema({
+  toJSON: { virtuals: true }, // Включаем виртуальные поля при преобразовании в JSON
+  toObject: { virtuals: true }, // И при преобразовании в обычный объект
+  timestamps: true,
+})
 export class Review {
   @Prop()
   name: string;
@@ -20,6 +24,15 @@ export class Review {
 
   @Prop({ type: SchemaMongoose.Types.ObjectId, ref: Product.name })
   productId: Types.ObjectId;
+
+  product?: Product;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);
+
+ReviewSchema.virtual('product', {
+  ref: 'Product', // Модель, с которой связываем
+  localField: 'productId', // Поле в текущей схеме
+  foreignField: '_id', // Поле в связанной схеме
+  justOne: true, // Возвращаем один документ (не массив)
+});
